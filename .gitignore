@@ -1,0 +1,37 @@
+## [Directory overrides]
+# Target directory
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+## [File overrides]
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono auto-generated files
+mono_crash.*
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.opensdf
+*.sdf
+*.cache
+*.impl
+*.iobj
+*.ipdb
+*.ltg
+*.xml
+# Host-specific settings
+appsettings.Development.json
