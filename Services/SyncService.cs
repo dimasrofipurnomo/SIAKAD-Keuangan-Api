@@ -39,7 +39,6 @@ namespace UserSyncApi.Services
 
             var externalIds = apiResponse.Data.Select(x => x.Id).ToList();
 
-            // Soft delete mahasiswa yang tidak ada di API eksternal
             var deletedStudents = await _context.Mahasiswas
                 .Where(m => !externalIds.Contains(m.Id))
                 .ToListAsync();
@@ -63,7 +62,6 @@ namespace UserSyncApi.Services
 
                 if (existing == null)
                 {
-                    // Buat record mahasiswa baru dengan data keuangan default
                     var newMahasiswa = new Mahasiswa
                     {
                         Id = item.Id,
@@ -82,7 +80,6 @@ namespace UserSyncApi.Services
                 }
                 else
                 {
-                    // Pulihkan status mahasiswa jika sebelumnya berstatus soft-deleted
                     if (existing.IsDeleted)
                     {
                         existing.IsDeleted = false;
@@ -90,7 +87,6 @@ namespace UserSyncApi.Services
                         _logger.LogInformation($"Restoring soft-deleted mahasiswa: {item.Nama} ({item.Id})");
                     }
 
-                    // Perbarui data akademik saja, pertahankan data keuangan lokal
                     existing.Nama = item.Nama;
                     existing.ProgramStudi = item.ProgramStudi;
                     existing.MataKuliah = item.MataKuliah;
