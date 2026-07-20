@@ -4,7 +4,7 @@ SIAKAD Keuangan API adalah sebuah RESTful Web API berbasis **ASP.NET Core (.NET 
 
 ---
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
 1. **Sinkronisasi Data Mahasiswa Otomatis (`Sync Service`)**:
    - Menghubungkan ke API eksternal (`https://mahasiswa-api-psi.vercel.app/api/mahasiswa`).
@@ -25,7 +25,7 @@ SIAKAD Keuangan API adalah sebuah RESTful Web API berbasis **ASP.NET Core (.NET 
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 * **Runtime & Framework**: .NET 8 (ASP.NET Core Web API)
 * **Database Provider**: PostgreSQL (via Npgsql EF Core Provider)
@@ -35,7 +35,7 @@ SIAKAD Keuangan API adalah sebuah RESTful Web API berbasis **ASP.NET Core (.NET 
 
 ---
 
-## 📁 Struktur Proyek
+## Struktur Proyek
 
 ```text
 SIAKAD-Keuangan-Api/
@@ -55,7 +55,7 @@ SIAKAD-Keuangan-Api/
 
 ---
 
-## 🗄️ Relasi Database
+## Relasi Database
 
 Aplikasi menggunakan database PostgreSQL dengan relasi sebagai berikut:
 1. **Mahasiswa (1) ── (N) RiwayatPembayaran**: Satu mahasiswa dapat memiliki banyak riwayat transaksi pembayaran. Penghapusan mahasiswa secara fisik (*hard-delete*) dikonfigurasi dengan *Cascade Delete*.
@@ -69,7 +69,7 @@ Metode pembayaran berikut akan ter-*seed* secara otomatis saat inisialisasi data
 
 ---
 
-## ⚙️ Cara Menjalankan Project
+## Cara Menjalankan Project
 
 ### 1. Prasyarat
 Pastikan Anda sudah menginstal:
@@ -90,7 +90,7 @@ Sesuaikan konfigurasi koneksi database PostgreSQL Anda pada berkas [appsettings.
 }
 ```
 
-### 4. Jalankan Migrasi Database
+### Jalankan Migrasi Database
 Buka terminal pada direktori proyek dan jalankan perintah EF Core untuk membuat schema database:
 ```bash
 dotnet ef database update
@@ -104,116 +104,3 @@ dotnet run
 ```
 Aplikasi akan berjalan secara default di `http://localhost:5000` atau `https://localhost:5001`. Anda dapat mengakses dokumentasi Swagger UI di browser melalui alamat:
 `https://localhost:5001/swagger/index.html` (atau port HTTP/HTTPS yang tertera di terminal saat dijalankan).
-
----
-
-## 📖 Dokumentasi Endpoint API
-
-Semua endpoint keuangan berakar pada `/api/Keuangan`, kecuali untuk metode pembayaran.
-
-### 1. Dapatkan Semua Metode Pembayaran
-* **Endpoint**: `GET /api/metode-pembayaran`
-* **Response**:
-  ```json
-  {
-    "success": true,
-    "count": 4,
-    "data": [
-      { "id": 1, "namaMetode": "Transfer Bank", "kode": "TRF" },
-      { "id": 2, "namaMetode": "E-Wallet", "kode": "EWLT" },
-      { "id": 3, "namaMetode": "QRIS", "kode": "QRIS" },
-      { "id": 4, "namaMetode": "Tunai", "kode": "CASH" }
-    ]
-  }
-  ```
-
-### 2. Sinkronisasi Data Mahasiswa
-* **Endpoint**: `POST /api/Keuangan/sync`
-* **Deskripsi**: Mengambil data mahasiswa terbaru dari API eksternal dan memperbarui database lokal.
-* **Response**:
-  ```json
-  {
-    "success": true,
-    "message": "Sinkronisasi data mahasiswa berhasil dilakukan."
-  }
-  ```
-
-### 3. Dapatkan Semua Data Mahasiswa (Beserta Riwayat Pembayaran)
-* **Endpoint**: `GET /api/Keuangan`
-* **Response**:
-  ```json
-  {
-    "success": true,
-    "count": 1,
-    "data": [
-      {
-        "id": "mahasiswa-id-123",
-        "nama": "Dimas Rofi Purnomo",
-        "programStudi": "Teknik Informatika",
-        "mataKuliah": ["Pemrograman Lanjut", "Basis Data"],
-        "statusAkademik": "Aktif",
-        "nilaiUkt": 6000000,
-        "statusTagihan": "Belum Lunas",
-        "syncedAt": "2026-07-20T08:00:00Z",
-        "isDeleted": false,
-        "deletedAt": null,
-        "riwayatPembayaran": []
-      }
-    ]
-  }
-  ```
-
-### 4. Dapatkan Data Mahasiswa Berdasarkan ID
-* **Endpoint**: `GET /api/Keuangan/{id}`
-* **Response**: (Detail mahasiswa tunggal seperti di atas)
-
-### 5. Perbarui Nilai UKT Mahasiswa
-* **Endpoint**: `PUT /api/Keuangan/{id}/ukt`
-* **Body Request**:
-  ```json
-  {
-    "nilaiUkt": 5500000
-  }
-  ```
-* **Response**:
-  ```json
-  {
-    "success": true,
-    "message": "Nilai UKT berhasil diperbarui.",
-    "data": { ... }
-  }
-  ```
-
-### 6. Catat Pembayaran UKT Mahasiswa
-* **Endpoint**: `POST /api/Keuangan/{id}/bayar`
-* **Body Request**:
-  ```json
-  {
-    "jumlahBayar": 2000000,
-    "metodePembayaranId": 1
-  }
-  ```
-* **Response**:
-  ```json
-  {
-    "success": true,
-    "message": "Pembayaran berhasil dicatat.",
-    "data": {
-      "mahasiswaId": "mahasiswa-id-123",
-      "nama": "Dimas Rofi Purnomo",
-      "nilaiUkt": 6000000,
-      "statusTagihan": "Belum Lunas (Kurang 4,000,000)",
-      "pembayaranTerakhir": {
-        "id": 1,
-        "mahasiswaId": "mahasiswa-id-123",
-        "jumlahBayar": 2000000,
-        "tanggalBayar": "2026-07-20T08:05:00Z",
-        "metodePembayaran": {
-          "id": 1,
-          "namaMetode": "Transfer Bank",
-          "kode": "TRF"
-        }
-      }
-    }
-  }
-  ```
